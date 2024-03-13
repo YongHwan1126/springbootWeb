@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>th:text 속성 사용하기</h1>
+	<h1 th:text = "조선시대의 적">홍길동</h1>
+	<!-- 
+		th:text는 타임리프 여러 속성중 하나 코드상에는 저렇게 작성되지만 실제 브라우저에는 최종 랜더링 된 해당 텍스트만
+		대체 되서 나타낸다.
+		
+		th:text 넘어온 변수값이 없거나 아무런 값이 저장되지 않으면 에러가 난다. th:text 깂이 하더라도 띄어쓰기 가 들어가면 
+		에러가 발생할 수 있다.
+	 -->
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<!-- 타임리프 템플릿 구조화
+	다양한 페이지를 분리하여 사용할 수 있다 
+	코드의 재사용성과 유지보수성을 향상 시킬 수 있다. 
+	
+	크게 두가지로 나뉜다.
+	th:include 속성 공통적인 부분을 파일로 분리하여 include 포함할수 있다.
+	
+	Layout Dialect라는 기능
+	파일을 전체 포함을 할 수도 있고 페이지 내에 특정한 영역을 다른 파일에 포함할 수 있다.
+	외부 라이브러리가 필요하다 메이븐으로 추가해야된다.-->
+	<h1>main page!</h1>
+	<!-- 헤더부분(jsp include) -->
+<header th:replace="layouts/header::HeaderFragment"></header>
+</body>
+</html>

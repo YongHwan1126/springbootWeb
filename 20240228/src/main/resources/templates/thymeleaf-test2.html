@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:with ="firstVal = ${'aaa'},secondVal = ${'bbb'}">
+		<h1 th:text = "{firstVal == '' ? '빈값입니다 ':firstVal}"></h1>
+		<h1 th:if = "${secondVal != ''}" th:text = "${secondVal}"></h1>
+		<!-- 
+		th:with 새로운 변수를 정의하거나 기존 변수를 변경할 떄 사용된다 두개의 변수를 정의하고 각각 초기화한다.
+		값을 직접 입력 해도 되지만 보통은 컨트롤러에서 넘어온 매개변수의 값이나  객체의 값을 받아서 처리하는개 좋다. -->
+		
+		<h1 th:text="${data}"></h1>
+		<h1 th:text="${data2} + '어떤걸까'"></h1>
+		
+		<!-- 
+			변수에 문자열을 붙이고 싶을때는  더하기(+) 연산자를 이용해서 변수와 문자열을 붙여준다.
+			이때 ! 홑 따음표를 사용하는 것을 주의!
+			문자 시작이 "" 로 시작해서 ''쓰는거임/
+		 -->
+	</div>
+</body>
+</html>

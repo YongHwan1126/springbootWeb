@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Form 값 전달하고 주고 받기</title>
+</head>
+<body>
+	<h1>multi Form Page</h1>
+	<h3 th:text ="${msg}"></h3>
+	
+	<!-- form 태그를 이용해서 thymeleaf-test4 post가 전송 받으면 되고 페이지가 랜더링되도 값이 사라지짖 
+	않고 input 창안에 있도록 코드를 작성해보세요~
+	아이디,이름,메일,나이,성별 -->
+	<form action="/thymeleaf-test4" method="post" th:object = "${formData}">
+		아이디?<input type="text" name = "id" th:value = "*{id}"/>
+		이름?<input type="text" name = "name" th:value = "*{name}"/>
+		이메일?<input type="text" name = "email" th:value = "*{email}"/>
+		나이?<input type="text" name = "age" th:value = "*{age}"/>
+		성별?<input type="text" name = "gender" th:value = "*{gender}"/>
+		<input type = "submit" value = "Send">
+	</form>
+</body>
+</html>
