@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:replace="/layouts/header ::headerLayout"></div>
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<h2 align="center">게시글 상세 조회</h2>
+				<table class="table table-boarded" id="tbl-board">
+					<tr>
+						<th>글번호</th>
+						<td th:text="${board.no}"></td>
+					</tr>
+					<tr>
+						<th>제 목</th>
+						<td th:text="${board.getTitle()}"></td>
+					</tr>
+					<tr>
+						<th>작성자</th>
+						<td th:text="${board.getWriterNo()}"></td>
+					</tr>
+					<tr>
+						<th>조회수</th>
+						<td th:text="${board.getReadCount()}"></td>
+					</tr>
+					<tr>
+						<th>작성 시간</th>
+						<td
+							th:text="${#dates.format(board.getCreateDate(), 'yyyy-MM-dd HH:mm:ss')}"></td>
+					</tr>
+					<tr>
+						<th>수정 시간</th>
+						<td
+							th:text="${#dates.format(board.getModifyDate(), 'yyyy-MM-dd HH:mm:ss')}"></td>
+					</tr>
+
+					<tr>
+						<th>내 용</th>
+						<td><textarea rows="15" cols="50" readonly
+								th:text="${board.getContent()}"></textarea></td>
+					</tr>
+				</table>
+				<!-- 리플 작성 Form -->
+				<div id="comment-container">
+					<div class="comment-editor" align="center">
+						<form action="/board/reply" method="post">
+							<input type="hidden" name="boardNo" th:value="${board.no}" /> <input
+								type="hidden" name="writerId" th:value="${loginMember}" />
+							<textarea name="content" id="replyContent" cols="55" rows="3"></textarea>
+							<button type="submit" id="btn-insert">등록</button>
+						</form>
+					</div>
+				</div>
+
+				<!-- 댓글 출력  (! = not)-->
+				<table id="tbl-commemt">
+
+					<th:block th:if="${ ! #lists.isEmpty(replyList)}">
+						<th:block th:each="reply : ${replyList}">
+							<tr>
+								<td>
+								 	<sub class="comment-writer" th:text="${reply.getWriterNo()}">
+								 	</sub>
+								 	<sub class="comment-date" th:text="${#dates.format(reply.getCreateDate(), 
+								 	'yyyy-MM-dd HH:mm:ss')}">
+								 	</sub>
+								 	<br>
+								 	<span th:text="${reply.getContent}"></span>
+								</td>
+							</tr>
+						</th:block>
+							
+					</th:block>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="/layouts/footer::footerLayout"></div>
+</body>
+</html>

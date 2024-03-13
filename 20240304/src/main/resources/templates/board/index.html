@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:replace="/layouts/header::headerLayout"></th:block>
+
+<body>
+	<th:block layout:fragment="content">
+		<div class="text-center" style="margin: 0 auto; width: 80%">
+			<h1>게시판</h1>
+			<!-- 검색하는 라디오버튼  + input 창  -->
+			<div class="row">
+				<div class="col-md-6 offset-md-3 mb-3">
+					<form action="/board/search" method="post">
+
+						<div class="form-check form-check-inline mt-2">
+							<input class="form-check-input" type="radio" name="searchOption"
+								id="titleOption" value="title" checked> <label
+								class="form-check-label" for="titleOption">Title</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="searchOption"
+								id="contentOption" value="content"> <label
+								class="form-check-label" for="contentOption">Content</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="searchOption"
+								id="titleContentOption" value="titleContent"> <label
+								class="form-check-label" for="titleContentOption">Title
+								+ Content</label>
+						</div>
+						<div class="input-group">
+							<input type="text" class="form-control" name="search">
+							<div class="input-group-append">
+								<button class="btn btn-outline-success" type="submit">Search</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<!-- 임시 버튼 모달을 테스트 하기 위함 -->
+			<button type="button" id="searchBtn" class="btn btn-success">게시글 검색</button>
+			<!-- 실제 테이블 -->
+			<table class="table table-striped">
+				<thead class="table-primary">
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">title</th>
+						<th scope="col">content</th>
+						<th scope="col">createDate</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- 타임리프를 이용해서 게시글 을출력 -->
+					<tr th:each="list : ${boardList}">
+						<th th:text="${list.no}"></th>
+						<th>
+							<!-- @{'/board/detail/' +{list.no}} --> <!-- <a th:href="@{/board/detail/{list.no}(boardNo=${list.no})}" 
+						th:text="${list.title}"></a> 이거 왜 안됨 @{|/board/detail/${list.no}|} 이건 됨-->
+							<a href = "#" class="showDetail" th:text="${list.title}"></a>
+						</th>
+						<th th:text="${list.content}"></th>
+						<th
+							th:text="${#dates.format(list.createDate,'yyyy-MM-dd HH:mm:ss')}"></th>
+					</tr>
+				</tbody>
+			</table>
+			<!-- 페이징 처리 -->
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+					<!-- 이전버튼   + 첫번째 페이지로 오겠다.
+				1페이지일 경우에는 이전으로 움직일수 없다 그럼으로 비활성화가 되어야한다.-->
+					<li th:class="${page.first} ? 'page-item disabled' : 'page-item'"><a
+						class="page-link"
+						th:href="@{${#httpServletRequest.requestURI}(page= 0)}">&laquo;</a></li>
+					<!-- 0부터 페이지의 총 페이지수 -1까지 숫자를 돌아가면서 각 페이지 번호를 나타낸다. -->
+					<li th:each="i : ${#numbers.sequence(0,page.totalPages -1)}"
+						th:class="${page.number == i} ? 'page-item active' : 'page-item' ">
+						<a class="page-link"
+						th:href="@{${#httpServletRequest.requestURI}(page=${i})}"
+						th:text="${i +1}"></a> <!-- #httpServletRequest.requestURI
+							타임리프가 제공하는 라이브러리다! 
+							현재 HTTP 요청의 URI를 가져오는데 사용됩니다.
+							
+						  -->
+					</li>
+					<!-- 이후 버튼 -->
+					<li th:class="${page.last} ? 'page-item disabled' : 'page-item'"><a
+						class="page-link"
+						th:href="@{${#httpServletRequest.requestURI}(page=${page.totalPages-1})}">&raquo;</a></li>
+				</ul>
+			</nav>
+		</div>
+
+	</th:block>
+
+	<!-- 항상 밑에 부분에 모달창 -->
+	<!-- 모달창 -->
+	<div class="modal fade" id="myModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div
+			class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+			style="max-width: 1000px;">
+
+
+			<div class="modal-content">
+				<div
+					class="modal-header d-flex justify-content-center align-items-center">
+					<h5 class="modal-title" id="modalTitle">상세페이지</h5>
+					<!-- 검색에 필요한 input button을 추가 -->
+					<input type="text" id="searchModalInput">
+					<button type="button" id ="search">검색</button>
+				</div>
+				<div class="modal-body">
+					<table class="table table-bordered" id="modalContent">
+						<tbody>
+							<tr>
+								<th scope="row">글번호</th>
+								<td th:text="${no}" id="no"></td>
+							</tr>
+							<tr>
+								<th scope="row">제목</th>
+								<td th:text="${title}" id="title"></td>
+							</tr>
+							<tr>
+								<th scope="row">작성자</th>
+								<td th:text="${writerNo}" id="writerNo"></td>
+							</tr>
+							<tr>
+								<th scope="row">조회수</th>
+								<td th:text="${readCount}" id="readCount"></td>
+							</tr>
+							<tr>
+								<th scope="row">작성 시간</th>
+								<td
+									th:text="${#dates.format(createDate, 'yyyy-MM-dd HH:mm:ss')}"
+									id="createDate"></td>
+							</tr>
+							<tr>
+								<th scope="row">내용</th>
+								<td><textarea rows="15" cols="50" readonly
+										th:text="${content}" id="content"></textarea></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<th:block th:replace="/layouts/footer::footerLayout"></th:block>
+
+</html>
